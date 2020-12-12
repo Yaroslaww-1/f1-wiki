@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Table as TableBootstrap } from 'react-bootstrap';
 
+export interface ITableColumn {
+  name: string;
+  customElement?: ReactNode;
+}
+
 interface IProps<T> {
+  columns: ITableColumn[];
   rows: T[];
 }
 
-const Table = <T extends Record<string, string | number | Date>>({ rows }: IProps<T>) => {
-  const columnNames = Object.keys(rows[0]);
+const Table = <T extends Record<string, string | number | Date>>({ rows, columns }: IProps<T>) => {
+  const getTableHead = () =>
+    columns.map(({ name, customElement }) => {
+      if (customElement) return customElement;
+      else
+        return (
+          <th key={name} style={{ textTransform: 'capitalize' }}>
+            {name}
+          </th>
+        );
+    });
+
   const getRow = (row: T, key: number) => {
+    const columnNames = columns.map((c) => c.name);
     const rowElementValues = columnNames.map((key) => row[key]);
     return (
       <tr key={key}>
@@ -21,11 +38,7 @@ const Table = <T extends Record<string, string | number | Date>>({ rows }: IProp
   return (
     <TableBootstrap striped bordered hover>
       <thead>
-        <tr>
-          {columnNames.map((columnName, index) => (
-            <th key={index}>{columnName}</th>
-          ))}
-        </tr>
+        <tr>{getTableHead()}</tr>
       </thead>
       <tbody>{rows.map((row, index) => getRow(row, index))}</tbody>
     </TableBootstrap>
