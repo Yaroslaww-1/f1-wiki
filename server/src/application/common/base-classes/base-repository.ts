@@ -5,7 +5,7 @@ export class BaseRepository {
 
   async query<T>(query: string, values?: unknown[]): Promise<T[]> {
     const connection = await this._pool.connect();
-    const result = await connection.query(query);
+    const result = await connection.query(query, values);
     connection.release();
     return result.rows as T[];
   }
