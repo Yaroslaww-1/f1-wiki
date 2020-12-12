@@ -1,13 +1,13 @@
 import React, { ReactNode } from 'react';
 import { Table as TableBootstrap } from 'react-bootstrap';
 
-export interface ITableColumn {
-  name: string;
+export interface ITableColumn<T> {
+  name: keyof T;
   customElement?: ReactNode;
 }
 
 interface IProps<T> {
-  columns: ITableColumn[];
+  columns: ITableColumn<T>[];
   rows: T[];
 }
 
@@ -17,7 +17,7 @@ const Table = <T extends Record<string, string | number | Date>>({ rows, columns
       if (customElement) return customElement;
       else
         return (
-          <th key={name} style={{ textTransform: 'capitalize' }}>
+          <th key={name.toString()} style={{ textTransform: 'capitalize' }}>
             {name}
           </th>
         );
