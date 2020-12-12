@@ -3,5 +3,6 @@ export type DriverModel = {
   name: string;
   totalSeasonPoints: number;
   birthday: Date;
-  Nationality: number;
+  nationality: number;
+  teamID: number;
 };

@@ -1,7 +1,8 @@
 import React from 'react';
+import DriversTable from './DriversTable';
 
 const App: React.FC = () => {
-  return <div>Hello world</div>;
+  return <DriversTable />;
 };
 
 export default App;
