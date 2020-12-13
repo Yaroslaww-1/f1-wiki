@@ -1,27 +1,19 @@
-export class DriverDto {
-  readonly id: number;
-  readonly name: string;
-  readonly totalSeasonPoints: number;
-  readonly birthday: Date;
-  readonly nationality: number;
+import { Exclude, Expose } from 'class-transformer';
 
-  constructor({
-    id,
-    name,
-    totalSeasonPoints,
-    birthday,
-    nationality,
-  }: {
-    id: number;
-    name: string;
-    totalSeasonPoints: number;
-    birthday: Date;
-    nationality: number;
-  }) {
-    this.id = id;
-    this.name = name;
-    this.totalSeasonPoints = totalSeasonPoints;
-    this.birthday = birthday;
-    this.nationality = nationality;
-  }
+@Exclude()
+export class DriverDto {
+  @Expose()
+  readonly id: number;
+
+  @Expose()
+  readonly name: string;
+
+  @Expose()
+  readonly totalSeasonPoints: number;
+
+  @Expose()
+  readonly birthday: Date;
+
+  @Expose()
+  readonly nationality: number;
 }
