@@ -8,7 +8,7 @@ import Table from 'src/components/Table';
 
 const DriversTable: React.FC = () => {
   const [drivers, setDrivers] = React.useState<DriverModel[] | null>(null);
-  const [driverFilter, setDriverFilter] = React.useState<IDriverFilter>({ name: '', offset: 0, limit: 10 });
+  const [driverFilter, setDriverFilter] = React.useState<IDriverFilter>({ offset: 0, limit: 10 });
 
   React.useEffect(() => {
     fetchAndUpdateDrivers();
@@ -41,7 +41,12 @@ const DriversTable: React.FC = () => {
           columns={[
             { name: 'id' },
             { name: 'name', customElement: <Input placeholder="Name" onEdit={onDriverFilterUpdate('name')} /> },
-            { name: 'totalSeasonPoints' },
+            {
+              name: 'totalSeasonPoints',
+              customElement: (
+                <Input placeholder="Total Season Points" onEdit={onDriverFilterUpdate('totalSeasonPoints')} />
+              ),
+            },
             { name: 'birthday' },
             { name: 'nationality' },
             { name: 'teamID' },

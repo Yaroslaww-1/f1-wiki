@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Pagination, Row } from 'react-bootstrap';
+import { Col, Container, Pagination, Row } from 'react-bootstrap';
 import { IPaginationFilter } from 'src/api/filters/pagination.filter';
 
 interface IProps {
@@ -20,16 +20,18 @@ const PaginationComponent: React.FC<IProps> = ({ children, step, onChange, total
   };
 
   return (
-    <Container>
+    <Container fluid>
       <Row>{children}</Row>
       <Row>
-        <Pagination>
-          {pages.map((page) => (
-            <Pagination.Item key={page} onClick={() => onPageSelect(page)} active={page === selectedPage}>
-              {page}
-            </Pagination.Item>
-          ))}
-        </Pagination>
+        <Col>
+          <Pagination className="justify-content-center">
+            {pages.map((page) => (
+              <Pagination.Item key={page} onClick={() => onPageSelect(page)} active={page === selectedPage}>
+                {page}
+              </Pagination.Item>
+            ))}
+          </Pagination>
+        </Col>
       </Row>
     </Container>
   );

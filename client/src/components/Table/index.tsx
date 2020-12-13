@@ -14,7 +14,7 @@ interface IProps<T> {
 const Table = <T extends Record<string, string | number | Date>>({ rows, columns }: IProps<T>) => {
   const getTableHead = () =>
     columns.map(({ name, customElement }) => {
-      if (customElement) return customElement;
+      if (customElement) return <th key={name.toString()}>{customElement}</th>;
       else
         return (
           <th key={name.toString()} style={{ textTransform: 'capitalize' }}>

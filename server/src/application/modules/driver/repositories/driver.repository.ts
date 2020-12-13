@@ -6,6 +6,7 @@ import { DriverEntity } from '../entities/driver.entity';
 
 export interface IDriverFilter {
   name?: string;
+  totalSeasonPoints?: number;
   offset?: number;
   limit?: number;
 }
@@ -16,12 +17,20 @@ export class DriverRepository extends BaseRepository implements IRepository<Driv
     super(pool);
   }
 
-  async findAll(filter: IDriverFilter = {}): Promise<DriverEntity[]> {
-    const { name = '', offset = 0, limit = 10 } = filter;
+  private getWhereFromFilter(filter: IDriverFilter): string {
+    const where = [];
+    if (filter.name) where.push(`"Name" ILIKE '${filter.name}%'`);
+    if (filter.totalSeasonPoints) where.push(`"TotalSeasonPoints" = ${filter.totalSeasonPoints}`);
+    const whereCondition = where.length > 0 ? `WHERE ${where.join(' AND ')}` : '';
+    return whereCondition;
+  }
+
+  async findAll({ offset = 0, limit = 10, ...filter }: IDriverFilter = {}): Promise<DriverEntity[]> {
+    const where = this.getWhereFromFilter(filter);
     const drivers = await super.query<DriverEntity>(
       `
       SELECT * FROM "Drivers"
-      WHERE "Name" ILIKE '${name}%'
+      ${where}
       OFFSET $1
       LIMIT $2 
     `,
