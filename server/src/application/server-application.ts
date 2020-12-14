@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as dotenv from 'dotenv';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -16,12 +16,19 @@ export class ServerApplication {
   }
 
   public async run(): Promise<void> {
-    const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(RootModule);
+    const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(RootModule, {
+      bodyParser: true,
+    });
 
     app.enableCors({
       origin: ServerApplicationConfig.appClientUrl,
       optionsSuccessStatus: 200,
     });
+    app.useGlobalPipes(
+      new ValidationPipe({
+        transform: true,
+      }),
+    );
     app.setGlobalPrefix('api');
 
     const options = new DocumentBuilder()

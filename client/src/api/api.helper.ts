@@ -6,7 +6,7 @@ class Api {
   private readonly instance: AxiosInstance;
   private readonly commonHeaders: {
     [key in string]: string;
-  }[];
+  };
   constructor() {
     this.instance = axios.create({
       baseURL: BASE_URL,
@@ -14,7 +14,7 @@ class Api {
         'Content-Type': 'application/json',
       },
     });
-    this.commonHeaders = [];
+    this.commonHeaders = { 'Content-Type': 'application/json' };
   }
 
   async get<Response = unknown, Params = unknown>(url: string, params?: Params): Promise<Response> {

@@ -1,18 +1,42 @@
 import React from 'react';
 import { FormControl } from 'react-bootstrap';
 
-interface IProps {
-  placeholder: string;
-  onEdit: (newValue: string) => void;
-}
+export type IInputTypes = string | number;
 
-const Input: React.FC<IProps> = ({ placeholder, onEdit: onEditProps }) => {
+export type IWithInput = {
+  type?: 'string' | 'number';
+  onEdit: (newValue: IInputTypes) => void;
+};
+
+type IProps = {
+  initialValue?: string;
+  placeholder?: string;
+} & IWithInput;
+
+const Input: React.FC<IProps> = ({ initialValue = '', placeholder, onEdit: onEditProps, type = 'string' }) => {
+  const [value, setValue] = React.useState<string>(initialValue);
+
+  React.useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
+
   const onEdit = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
-    onEditProps(newValue);
+    setValue(newValue);
+
+    switch (type) {
+      case 'string': {
+        onEditProps(String(newValue));
+        break;
+      }
+      case 'number': {
+        onEditProps(Number(newValue));
+        break;
+      }
+    }
   };
 
-  return <FormControl placeholder={placeholder} onChange={onEdit} />;
+  return <FormControl placeholder={placeholder} onChange={onEdit} value={value} />;
 };
 
 export default Input;

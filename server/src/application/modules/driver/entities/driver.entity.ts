@@ -16,6 +16,9 @@ export class DriverEntity {
   @Expose({ name: 'nationality' })
   readonly Nationality: number;
 
+  @Expose({ name: 'teamID' })
+  readonly TeamID: number;
+
   constructor(props: DriverEntity) {
     Object.assign(this, props);
   }

@@ -2,7 +2,7 @@ import { Exclude, Expose } from 'class-transformer';
 import { IsNumber, IsString } from 'class-validator';
 
 @Exclude()
-export class DriverDto {
+export class UpdateDriverDto {
   @Expose()
   @IsNumber()
   readonly id: number;
@@ -26,8 +26,4 @@ export class DriverDto {
   @Expose()
   @IsNumber()
   readonly teamID: number;
-
-  constructor(props: DriverDto) {
-    Object.assign(this, props);
-  }
 }

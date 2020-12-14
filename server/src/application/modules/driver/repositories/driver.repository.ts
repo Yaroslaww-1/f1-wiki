@@ -2,6 +2,8 @@ import { BaseRepository } from '@application/common/base-classes/base-repository
 import { IRepository } from '@application/common/types/repository.type';
 import { Injectable } from '@nestjs/common';
 import { Pool } from 'pg';
+import { CreateDriverDto } from '../dtos/create-driver.dto';
+import { UpdateDriverDto } from '../dtos/update-driver.dto';
 import { DriverEntity } from '../entities/driver.entity';
 
 export interface IDriverFilter {
@@ -12,7 +14,8 @@ export interface IDriverFilter {
 }
 
 @Injectable()
-export class DriverRepository extends BaseRepository implements IRepository<DriverEntity, unknown> {
+export class DriverRepository extends BaseRepository
+  implements IRepository<DriverEntity, CreateDriverDto, UpdateDriverDto> {
   constructor(private readonly pool: Pool) {
     super(pool);
   }
@@ -32,7 +35,7 @@ export class DriverRepository extends BaseRepository implements IRepository<Driv
       SELECT * FROM "Drivers"
       ${where}
       OFFSET $1
-      LIMIT $2 
+      LIMIT $2;
     `,
       [offset, limit],
     );
@@ -47,11 +50,31 @@ export class DriverRepository extends BaseRepository implements IRepository<Driv
     throw new Error('Method not implemented.');
   }
 
-  update(id: number, updatingDto: unknown): Promise<DriverEntity> {
-    throw new Error('Method not implemented.');
+  async update(id: number, updatingDto: UpdateDriverDto): Promise<DriverEntity> {
+    const { name, totalSeasonPoints, birthday, nationality, teamID } = updatingDto;
+    console.log(id, updatingDto);
+    const driver = await super.query<DriverEntity>(
+      `
+      UPDATE "Drivers"
+      SET
+        "Name" = '${name}',
+        "TotalSeasonPoints" = ${totalSeasonPoints},
+        "Birthday" = '${birthday}',
+        "Nationality" = ${nationality},
+        "TeamID" = ${teamID}
+      WHERE "ID" = ${id}
+      RETURNING *
+    `,
+    );
+    return new DriverEntity(driver[0]);
   }
 
-  delete(id: number): Promise<void> {
-    throw new Error('Method not implemented.');
+  async delete(id: number): Promise<void> {
+    await super.query(
+      `
+      DELETE FROM "Drivers"
+      WHERE "ID" = ${id};
+      `,
+    );
   }
 }

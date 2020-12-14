@@ -34,24 +34,43 @@ const DriversTable: React.FC = () => {
     });
   };
 
+  const onEdit = async (newDriver: DriverModel) => {
+    await DriverService.updateDriver(newDriver);
+    fetchAndUpdateDrivers();
+  };
+
+  const onDelete = async (driver: DriverModel) => {
+    await DriverService.deleteDriver(driver.id);
+    fetchAndUpdateDrivers();
+  };
+
   return (
     drivers && (
       <PaginationComponent step={10} onChange={onPaginationChange}>
-        <Table
+        <Table<DriverModel>
           columns={[
-            { name: 'id' },
-            { name: 'name', customElement: <Input placeholder="Name" onEdit={onDriverFilterUpdate('name')} /> },
+            { name: 'id', type: 'number', isEditable: false },
+            {
+              name: 'name',
+              type: 'string',
+              isEditable: true,
+              filterElement: <Input placeholder="Name" onEdit={onDriverFilterUpdate('name')} />,
+            },
             {
               name: 'totalSeasonPoints',
-              customElement: (
+              type: 'string',
+              isEditable: true,
+              filterElement: (
                 <Input placeholder="Total Season Points" onEdit={onDriverFilterUpdate('totalSeasonPoints')} />
               ),
             },
-            { name: 'birthday' },
-            { name: 'nationality' },
-            { name: 'teamID' },
+            { name: 'birthday', type: 'string', isEditable: true },
+            { name: 'nationality', type: 'number', isEditable: true },
+            { name: 'teamID', type: 'number', isEditable: true },
           ]}
           rows={drivers}
+          onDelete={onDelete}
+          onEditSubmit={onEdit}
         />
       </PaginationComponent>
     )
