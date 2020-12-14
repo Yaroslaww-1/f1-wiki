@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Table as TableBootstrap } from 'react-bootstrap';
+import EditableRow from './components/EditableRow';
 import Row from './components/Row';
 
 export interface ITableColumn<T> {
@@ -12,11 +13,12 @@ export interface ITableColumn<T> {
 interface IProps<T> {
   columns: ITableColumn<T>[];
   rows: T[];
-  onEditSubmit: (rowValue: T) => void;
-  onDelete: (rowValue: T) => void;
+  editable?: boolean;
+  onEditSubmit?: (rowValue: T) => void;
+  onDelete?: (rowValue: T) => void;
 }
 
-const Table = <T extends { id: number }>({ rows, columns, onEditSubmit, onDelete }: IProps<T>) => {
+const Table = <T extends { id: number }>({ rows, columns, onEditSubmit, onDelete, editable = true }: IProps<T>) => {
   const getTableHead = () =>
     columns.map(({ name, filterElement }) => {
       if (filterElement) return <th key={name.toString()}>{filterElement}</th>;
@@ -32,13 +34,25 @@ const Table = <T extends { id: number }>({ rows, columns, onEditSubmit, onDelete
     <TableBootstrap striped bordered hover responsive>
       <thead>
         <tr>
-          <th>#</th>
+          {editable && <th>#</th>}
           {getTableHead()}
         </tr>
       </thead>
       <tbody>
         {rows.map((row) => (
-          <Row<T> key={row.id} columns={columns} initialValue={row} onEditSubmit={onEditSubmit} onDelete={onDelete} />
+          <>
+            {editable ? (
+              <EditableRow<T>
+                key={row.id}
+                columns={columns}
+                initialValue={row}
+                onEditSubmit={onEditSubmit}
+                onDelete={onDelete}
+              />
+            ) : (
+              <Row<T> key={row.id} columns={columns} value={row} />
+            )}
+          </>
         ))}
       </tbody>
     </TableBootstrap>

@@ -6,7 +6,7 @@ import { IDriverFilter } from '../repositories/driver.repository';
 import { DriverService } from '../services/driver.service';
 
 @Controller('drivers')
-export class DriveController {
+export class DriverController {
   constructor(private readonly driverService: DriverService) {}
 
   @Get()

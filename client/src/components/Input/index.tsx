@@ -5,7 +5,7 @@ export type IInputTypes = string | number;
 
 export type IWithInput = {
   type?: 'string' | 'number';
-  onEdit: (newValue: IInputTypes) => void;
+  onEdit?: (newValue: IInputTypes) => void;
 };
 
 type IProps = {
@@ -13,7 +13,12 @@ type IProps = {
   placeholder?: string;
 } & IWithInput;
 
-const Input: React.FC<IProps> = ({ initialValue = '', placeholder, onEdit: onEditProps, type = 'string' }) => {
+const Input: React.FC<IProps> = ({
+  initialValue = '',
+  placeholder,
+  onEdit: onEditProps = () => {},
+  type = 'string',
+}) => {
   const [value, setValue] = React.useState<string>(initialValue);
 
   React.useEffect(() => {
