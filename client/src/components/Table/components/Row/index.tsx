@@ -50,11 +50,10 @@ const Row = <T extends Record<string, IInputTypes>>({
     setIsEditing(false);
   };
 
-  const onRowElementValueEdit = (index: number) => (newValue: IInputTypes) => {
-    const property = columnNames[index];
+  const onRowElementValueEdit = (propertyName: keyof T) => (newValue: IInputTypes) => {
     setValue({
       ...value,
-      [property]: newValue,
+      [propertyName]: newValue,
     });
   };
 
@@ -86,7 +85,7 @@ const Row = <T extends Record<string, IInputTypes>>({
             key={index}
             value={String(value)}
             isEditable={isEditing && columns[index].isEditable}
-            onEdit={onRowElementValueEdit(index)}
+            onEdit={onRowElementValueEdit(columns[index].name)}
             type={typeof value as 'string' | 'number' | undefined}
           />
         );

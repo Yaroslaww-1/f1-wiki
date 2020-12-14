@@ -5,6 +5,7 @@ import { DriverService, IDriverFilter } from 'src/api/services/drivers.service';
 import Input from 'src/components/Input';
 import PaginationComponent from 'src/components/Pagination';
 import Table from 'src/components/Table';
+import AddDriver from '../AddDriver';
 
 const DriversTable: React.FC = () => {
   const [drivers, setDrivers] = React.useState<DriverModel[] | null>(null);
@@ -46,33 +47,36 @@ const DriversTable: React.FC = () => {
 
   return (
     drivers && (
-      <PaginationComponent step={10} onChange={onPaginationChange}>
-        <Table<DriverModel>
-          columns={[
-            { name: 'id', type: 'number', isEditable: false },
-            {
-              name: 'name',
-              type: 'string',
-              isEditable: true,
-              filterElement: <Input placeholder="Name" onEdit={onDriverFilterUpdate('name')} />,
-            },
-            {
-              name: 'totalSeasonPoints',
-              type: 'string',
-              isEditable: true,
-              filterElement: (
-                <Input placeholder="Total Season Points" onEdit={onDriverFilterUpdate('totalSeasonPoints')} />
-              ),
-            },
-            { name: 'birthday', type: 'string', isEditable: true },
-            { name: 'nationality', type: 'number', isEditable: true },
-            { name: 'teamID', type: 'number', isEditable: true },
-          ]}
-          rows={drivers}
-          onDelete={onDelete}
-          onEditSubmit={onEdit}
-        />
-      </PaginationComponent>
+      <>
+        <AddDriver onSave={fetchAndUpdateDrivers} />
+        <PaginationComponent step={10} onChange={onPaginationChange}>
+          <Table<DriverModel>
+            columns={[
+              { name: 'id', type: 'number', isEditable: false },
+              {
+                name: 'name',
+                type: 'string',
+                isEditable: true,
+                filterElement: <Input placeholder="Name" onEdit={onDriverFilterUpdate('name')} />,
+              },
+              {
+                name: 'totalSeasonPoints',
+                type: 'string',
+                isEditable: true,
+                filterElement: (
+                  <Input placeholder="Total Season Points" onEdit={onDriverFilterUpdate('totalSeasonPoints')} />
+                ),
+              },
+              { name: 'birthday', type: 'string', isEditable: true },
+              { name: 'nationality', type: 'number', isEditable: true },
+              { name: 'teamID', type: 'number', isEditable: true },
+            ]}
+            rows={drivers}
+            onDelete={onDelete}
+            onEditSubmit={onEdit}
+          />
+        </PaginationComponent>
+      </>
     )
   );
 };

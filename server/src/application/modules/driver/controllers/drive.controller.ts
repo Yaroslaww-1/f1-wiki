@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Header, Param, ParseIntPipe, Put, Query, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import { CreateDriverDto } from '../dtos/create-driver.dto';
 import { DriverDto } from '../dtos/driver.dto';
 import { UpdateDriverDto } from '../dtos/update-driver.dto';
 import { IDriverFilter } from '../repositories/driver.repository';
@@ -14,10 +15,14 @@ export class DriveController {
     return drivers;
   }
 
+  @Post()
+  async createDriver(@Body() driver: CreateDriverDto): Promise<DriverDto> {
+    const newDriver = await this.driverService.save(driver);
+    return newDriver;
+  }
+
   @Put(':id')
-  @Header('Content-Type', 'application/json')
   async updateDriver(@Param('id') driverId: number, @Body() driver: UpdateDriverDto): Promise<DriverDto> {
-    console.log(driver);
     const newDriver = await this.driverService.update(driverId, driver);
     return newDriver;
   }

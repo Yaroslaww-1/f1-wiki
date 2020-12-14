@@ -1,5 +1,4 @@
-export type DriverModel = {
-  id: number;
+export type CreateDriverModel = {
   name: string;
   totalSeasonPoints: number;
   birthday: string;

@@ -46,13 +46,20 @@ export class DriverRepository extends BaseRepository
     throw new Error('Method not implemented.');
   }
 
-  save(creatingDto: unknown): Promise<DriverEntity> {
-    throw new Error('Method not implemented.');
+  async save(creatingDto: CreateDriverDto): Promise<DriverEntity> {
+    const { name, totalSeasonPoints, birthday, nationality, teamID } = creatingDto;
+    const driver = await super.query<DriverEntity>(
+      `
+      INSERT INTO "Drivers" ("Name", "TotalSeasonPoints", "Birthday", "Nationality", "TeamID")
+      VALUES ('${name}', ${totalSeasonPoints}, '${birthday}', ${nationality}, ${teamID})
+      RETURNING *
+    `,
+    );
+    return new DriverEntity(driver[0]);
   }
 
   async update(id: number, updatingDto: UpdateDriverDto): Promise<DriverEntity> {
     const { name, totalSeasonPoints, birthday, nationality, teamID } = updatingDto;
-    console.log(id, updatingDto);
     const driver = await super.query<DriverEntity>(
       `
       UPDATE "Drivers"
